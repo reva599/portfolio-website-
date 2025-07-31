@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Placeholder Image Generator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .placeholder {
+            margin: 20px 0;
+            text-align: center;
+        }
+        canvas {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            margin: 10px;
+        }
+        .download-btn {
+            background: #2563eb;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        .download-btn:hover {
+            background: #1d4ed8;
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+        }
+        h2 {
+            color: #666;
+            border-bottom: 2px solid #2563eb;
+            padding-bottom: 5px;
+        }
+        .instructions {
+            background: #e3f2fd;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Portfolio Placeholder Images</h1>
+        
+        <div class="instructions">
+            <strong>Instructions:</strong>
+            <ol>
+                <li>Right-click on each image below and select "Save image as..."</li>
+                <li>Save the profile image as "profile.jpg" in the assets/images/ folder</li>
+                <li>Save the task thumbnails as "task1-thumb.jpg", "task2-thumb.jpg", etc. in the assets/images/ folder</li>
+                <li>Replace these placeholders with your actual photos and project screenshots</li>
+            </ol>
+        </div>
+
+        <div class="placeholder">
+            <h2>Profile Photo (400x400)</h2>
+            <canvas id="profile" width="400" height="400"></canvas>
+        </div>
+
+        <div class="placeholder">
+            <h2>Task Thumbnails (350x200)</h2>
+            <canvas id="task1" width="350" height="200"></canvas>
+            <canvas id="task2" width="350" height="200"></canvas>
+            <canvas id="task3" width="350" height="200"></canvas>
+            <canvas id="task4" width="350" height="200"></canvas>
+            <canvas id="task5" width="350" height="200"></canvas>
+        </div>
+    </div>
+
+    <script>
+        // Generate profile placeholder
+        function createProfilePlaceholder() {
+            const canvas = document.getElementById('profile');
+            const ctx = canvas.getContext('2d');
+            
+            // Background gradient
+            const gradient = ctx.createLinearGradient(0, 0, 400, 400);
+            gradient.addColorStop(0, '#2563eb');
+            gradient.addColorStop(1, '#1d4ed8');
+            ctx.fillStyle = gradient;
+            ctx.fillRect(0, 0, 400, 400);
+            
+            // Circle background
+            ctx.beginPath();
+            ctx.arc(200, 200, 150, 0, 2 * Math.PI);
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.2)';
+            ctx.fill();
+            
+            // User icon
+            ctx.fillStyle = 'white';
+            ctx.font = 'bold 120px Arial';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText('👤', 200, 200);
+            
+            // Text
+            ctx.font = 'bold 24px Arial';
+            ctx.fillText('Your Photo', 200, 350);
+        }
+
+        // Generate task thumbnails
+        function createTaskThumbnail(canvasId, taskNumber, title, color1, color2) {
+            const canvas = document.getElementById(canvasId);
+            const ctx = canvas.getContext('2d');
+            
+            // Background gradient
+            const gradient = ctx.createLinearGradient(0, 0, 350, 200);
+            gradient.addColorStop(0, color1);
+            gradient.addColorStop(1, color2);
+            ctx.fillStyle = gradient;
+            ctx.fillRect(0, 0, 350, 200);
+            
+            // Overlay pattern
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.1)';
+            for (let i = 0; i < 350; i += 40) {
+                for (let j = 0; j < 200; j += 40) {
+                    if ((i + j) % 80 === 0) {
+                        ctx.fillRect(i, j, 20, 20);
+                    }
+                }
+            }
+            
+            // Task number
+            ctx.fillStyle = 'white';
+            ctx.font = 'bold 48px Arial';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText(`Task ${taskNumber}`, 175, 80);
+            
+            // Title
+            ctx.font = 'bold 16px Arial';
+            ctx.fillText(title, 175, 130);
+            
+            // Icon
+            ctx.font = '32px Arial';
+            const icons = ['⚙️', '💾', '🔍', '🔒', '🚀'];
+            ctx.fillText(icons[taskNumber - 1], 175, 160);
+        }
+
+        // Create all placeholders
+        createProfilePlaceholder();
+        createTaskThumbnail('task1', 1, 'Development Environment', '#2563eb', '#1d4ed8');
+        createTaskThumbnail('task2', 2, 'CRUD Application', '#059669', '#047857');
+        createTaskThumbnail('task3', 3, 'Search & Pagination', '#dc2626', '#b91c1c');
+        createTaskThumbnail('task4', 4, 'Security Features', '#7c3aed', '#6d28d9');
+        createTaskThumbnail('task5', 5, 'Final Integration', '#ea580c', '#c2410c');
+
+        // Add download functionality
+        function downloadCanvas(canvasId, filename) {
+            const canvas = document.getElementById(canvasId);
+            const link = document.createElement('a');
+            link.download = filename;
+            link.href = canvas.toDataURL();
+            link.click();
+        }
+
+        // Add download buttons
+        document.addEventListener('DOMContentLoaded', function() {
+            const placeholders = document.querySelectorAll('.placeholder');
+            placeholders.forEach(placeholder => {
+                const canvas = placeholder.querySelector('canvas');
+                if (canvas) {
+                    const button = document.createElement('button');
+                    button.className = 'download-btn';
+                    button.textContent = 'Download Image';
+                    button.onclick = () => {
+                        let filename = canvas.id;
+                        if (filename === 'profile') {
+                            filename = 'profile.jpg';
+                        } else {
+                            filename = filename + '-thumb.jpg';
+                        }
+                        downloadCanvas(canvas.id, filename);
+                    };
+                    placeholder.appendChild(button);
+                }
+            });
+        });
+    </script>
+</body>
+</html>
